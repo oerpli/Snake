@@ -23,6 +23,7 @@ class Snake:
 		if new in self.Segments:
 			return (None,new,False) # snake died
 		self.Segments.append(new)
+		end = None
 		if not grow:
 			end = self.Segments.popleft()
 		return (end,new,True) # step successful
