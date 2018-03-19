@@ -19,7 +19,7 @@ class SnakeGameView:
 
         self.window.bind_all("<Key>", self.keyPressed)
         # self.window.bind_all("<KeyRelease>", self.keyReleased)
-        self.window.after(round(SnakeGameView.REDRAW_DELAY), self.animate) 
+        self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
         self.window.mainloop()
 
     def drawSnake(self, points):
@@ -45,7 +45,6 @@ class SnakeGameView:
             currentDuration = currentTime - self.startTime
 
             animationProgress = currentDuration / self.easingDuration
-            print("animation progress {}".format(animationProgress))
 
             coords = self.canvas.coords(self.currentRect)
             coords[2] = self.startValue + self.change * animationProgress
@@ -53,10 +52,9 @@ class SnakeGameView:
             self.canvas.coords(self.currentRect, coords)
 
             if (animationProgress >= 1.0):
-                print("resetting")
                 self.currentRect = None
 
-        self.window.after(round(SnakeGameView.REDRAW_DELAY), self.animate)
+        self.window.after(SnakeGameView.REDRAW_DELAY, self.animate)
 
     def keyPressed(self, event):
         if (event.keysym == 'Right'):
