@@ -9,23 +9,18 @@ class SnakeGameView:
 	SNAKE_WIDTH = 10
 	REDRAW_DELAY = 1000//60# 60FPS
 	GAME_DELAY = 125
+	GAME_OVER = False
 
 	def __init__(self):
 		self.window = tk.Tk()
 		self.canvas = tk.Canvas(self.window, bg="grey", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
+		self.labels = []
 
-		self.Game = GameBoard()
-		self.drawSnake(self.Game.Snake.GetCoordinates())
-		self.canvas.pack()
-
-		self.Direction = self.Game.Snake.Direction
-		# self.addPoint((3,2), 'RIGHT')
-		self.currentRect = None
+		self.startGame()
 
 		self.window.bind_all("<Key>", self.keyPressed)
 		# self.window.bind_all("<KeyRelease>", self.keyReleased)
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
-		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop) 
 		self.window.mainloop()
 
 	def drawSnake(self, points):
@@ -40,6 +35,7 @@ class SnakeGameView:
 		self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="red")
 
 	def addPoint(self, point, drawingDirection):
+		# adds a new point and prepares it to be rendered in the animate function
 		x = point[0] * SnakeGameView.SNAKE_WIDTH
 		y = point[1] * SnakeGameView.SNAKE_WIDTH
 
@@ -68,13 +64,49 @@ class SnakeGameView:
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate)
 
 	def gameLoop(self):
-		self.Game.Step(self.Direction)
+		(oldEnd, newFront, doesLive, newFood) = self.Game.Step(self.Direction)
+
+		if not doesLive:
+			self.handleGameOver()
+		else:
+			self.canvas.delete("all")
+			self.drawSnake(self.Game.Snake.GetCoordinates())
+			self.drawFood(self.Game.Food)
+			self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
+
+	def handleGameOver(self):
+		self.labels.append(tk.Label(self.window, text="Game Over"))
+		self.labels.append(tk.Label(self.window, text="Press space to restart"))
+
+		for label in self.labels:
+			label.pack()
+
+		SnakeGameView.GAME_OVER = True
+
+	def startGame(self):
 		self.canvas.delete("all")
+		SnakeGameView.GAME_OVER = False
+
+		for label in self.labels:
+			label.destroy()
+		
+		self.labels.clear()
+
+		self.Game = GameBoard()
 		self.drawSnake(self.Game.Snake.GetCoordinates())
-		self.drawFood(self.Game.Food)
-		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
+		self.canvas.pack()
+
+		self.Direction = self.Game.Snake.Direction
+		# self.addPoint((3,2), 'RIGHT')
+		self.currentRect = None
+
+		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop) 
 
 	def keyPressed(self, event):
+		if SnakeGameView.GAME_OVER and event.keysym == 'space':
+			self.startGame()
+			return
+
 		if (event.keysym == 'Right'):
 			self.Direction = Direction.RIGHT
 		elif (event.keysym == 'Left'):
@@ -83,6 +115,7 @@ class SnakeGameView:
 			self.Direction = Direction.UP
 		elif event.keysym == 'Up':
 			self.Direction = Direction.DOWN
+			
 	# def keyReleased(self, event):
 		# self.moveDirX = 0
 		# self.moveDirY = 0
