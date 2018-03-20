@@ -16,9 +16,9 @@ class SnakeGameView:
 		
 		self.canvas = tk.Canvas(self.window, bg="grey", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
 		self.gameInfoLabel = tk.Label(self.window)
-
+		self.numPlayers = 1
 		self.startGame()
-
+		self.initKeyDict()
 		self.window.bind_all("<Key>", self.keyPressed)
 		# self.window.bind_all("<KeyRelease>", self.keyReleased)
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
@@ -100,7 +100,7 @@ class SnakeGameView:
 		self.canvas.delete("all")
 		SnakeGameView.GAME_OVER = False
 
-		self.Game = GameBoard()
+		self.Game = GameBoard(self.numPlayers)
 
 		# self.addPoint((3,2), 'RIGHT')
 		self.currentRect = None
@@ -113,23 +113,38 @@ class SnakeGameView:
 		if SnakeGameView.GAME_OVER and event.keysym == 'space':
 			self.startGame()
 			return
+		if SnakeGameView.GAME_OVER and event.keysym == '1':
+			self.numPlayers = 1
+			return
+		if SnakeGameView.GAME_OVER and event.keysym == '2':
+			self.numPlayers = 2
+			return
+		if SnakeGameView.GAME_OVER and event.keysym == '3':
+			self.numPlayers = 3
+			return
+		
+		key = self.KeyDict.get(event.keysym, None)
+		if key is not None:
+			(snake,dir) = key
+			self.snakes[snake].NewDirection = dir
 
-		if (event.keysym == 'Right'):
-			self.snakes[0].NewDirection = Direction.RIGHT
-		elif (event.keysym == 'Left'):
-			self.snakes[0].NewDirection = Direction.LEFT
-		elif (event.keysym == 'Down'):
-			self.snakes[0].NewDirection = Direction.UP
-		elif event.keysym == 'Up':
-			self.snakes[0].NewDirection = Direction.DOWN
-		elif event.keysym == 'd':
-			self.snakes[1].NewDirection = Direction.RIGHT
-		elif event.keysym == 'a':
-			self.snakes[1].NewDirection = Direction.LEFT
-		elif event.keysym == 's':
-			self.snakes[1].NewDirection = Direction.UP
-		elif event.keysym == 'w':
-			self.snakes[1].NewDirection = Direction.DOWN
+	def initKeyDict(self):
+		P0 = ['Up','Down','Left','Right']
+		P1 = list('wsad')
+		P2 = list('ikjl')
+		p0d = self.playerKeyDict(P0,0)
+		p1d = self.playerKeyDict(P1,1)
+		p2d = self.playerKeyDict(P2,2)
+		self.KeyDict = {**p0d, **p1d, **p2d}
+
+		
+	def playerKeyDict(self, keys, playerNumber):
+		# keys should be list of key events in the order:
+		# UP DOWN LEFT RIGHT (WSAD)
+		playerdict = dict()
+		for (key,dir) in zip(keys,[Direction.DOWN,Direction.UP,Direction.LEFT,Direction.RIGHT]):
+			playerdict[key] = (playerNumber,dir)
+		return playerdict
 
 	# def keyReleased(self, event):
 		# self.moveDirX = 0

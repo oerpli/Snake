@@ -6,7 +6,7 @@ class GameBoard:
 	SIZE_X = 30
 	SIZE_Y = 30
 
-	def __init__(self, numSnakes = 2):
+	def __init__(self, numSnakes = 3):
 		self.Snakes = []
 		(cX,cY) = (GameBoard.SIZE_X // 2, GameBoard.SIZE_Y // 2)
 
