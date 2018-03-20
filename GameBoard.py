@@ -34,9 +34,9 @@ class GameBoard:
 			self.Grow = True
 			self.GenerateFood()
 			newFood = self.Food
-  		newFront = self.Reappear(newFront)
 			self.score += 1	
 
+		newFront = self.Reappear(newFront)
 		doesLive = doesLive and self.IsValidPoint(newFront)
 
 		return (oldEnd,newFront,doesLive,self.score,newFood)
