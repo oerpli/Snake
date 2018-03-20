@@ -11,6 +11,7 @@ class GameBoard:
 		self.Food = (0,0)
 		self.GenerateFood()
 		self.Grow = False
+		self.score = 0
 	
 	def ClearConsole(self):
 		os.system('cls' if os.name == 'nt' else 'clear')
@@ -33,10 +34,11 @@ class GameBoard:
 			self.Grow = True
 			self.GenerateFood()
 			newFood = self.Food
+			self.score += 1
 		
 		doesLive = doesLive and self.IsValidPoint(newFront)
 
-		return (oldEnd,newFront,doesLive,newFood)
+		return (oldEnd,newFront,doesLive,self.score,newFood)
 
 	def IsValidPoint(self,point):
 		if point[0] < 0 or point[1] < 0:
