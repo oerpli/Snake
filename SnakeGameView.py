@@ -13,6 +13,8 @@ class SnakeGameView:
 
 	def __init__(self):
 		self.window = tk.Tk()
+		self.window.title("Snake")
+		
 		self.canvas = tk.Canvas(self.window, bg="grey", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
 		self.labels = []
 
@@ -115,7 +117,7 @@ class SnakeGameView:
 			self.Direction = Direction.UP
 		elif event.keysym == 'Up':
 			self.Direction = Direction.DOWN
-			
+
 	# def keyReleased(self, event):
 		# self.moveDirX = 0
 		# self.moveDirY = 0
