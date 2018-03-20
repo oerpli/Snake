@@ -48,4 +48,4 @@ class Snake:
 			yield elems
 
 	def IsSnake(self, coords):
-		return coords in self.GetCoordinates()
+		return coords in self.GetCoordinates()[:-1]
