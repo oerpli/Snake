@@ -5,20 +5,24 @@ from collections import deque
 from Direction import *
 
 class Snake:
-	INIT_SIZE = 5
+	INIT_SIZE = 3
 	SPEED = 1
 
-	def __init__(self, X, Y):
-		self.Direction = Direction.RIGHT
+	def __init__(self, X, Y, initDirection):
+		self.Score = 0
+		self.Direction = initDirection
 		self.Segments = deque()
 		for i in range(Snake.INIT_SIZE):
-			self.Segments.appendleft((X-i, Y))
+			self.Segments.append((X+i+1, Y))
+		self.NewDirection = None
 
-	def Move(self, direction = None, grow = False):
+	def IncrementScore():
+		self.Score += 1
+	def Move(self, grow = False):
 		# Returns tuple (old end of snake, new front of snake, doesLive)
-		if direction is not None:
-			if Direction.ValidNewDirection(self.Direction,direction):
-				self.Direction = direction
+		if self.NewDirection is not None:
+			if Direction.ValidNewDirection(self.Direction,self.NewDirection):
+				self.Direction = self.NewDirection
 		last = self.Segments.pop()
 		new = Direction.AddToPoint(last, self.Direction)
 		self.Segments.append(last)
