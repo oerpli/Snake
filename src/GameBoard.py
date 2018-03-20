@@ -23,18 +23,26 @@ class GameBoard:
 		# n if snake grows (coords)
 		# Bool if gamestate is still valid
 		# nf = None or coords of new food
+		newFronts = []
 		newFood = False
 		for snake in self.Snakes:
 			newFront = snake.Move()
+			newFronts.append(newFront)
 			if newFront == self.Food:
 				snake.Grow = True
 				snake.IncrementScore()	
 				newFood = True
 			newFront = self.Reappear(snake,newFront)
-			if not self.IsValidPoint(newFront, snake):
+			if not self.IsValidPoint(newFront, True):
 				snake.Kill()
 		if newFood:
 			self.GenerateFood()
+		for i,e in enumerate(newFronts):
+			for j,f in enumerate(newFronts):
+				if i < j:
+					if e == f:
+						self.Snakes[i].Kill()
+						self.Snakes[j].Kill()
 		return (self.Snakes,self.Food)
 
 	def Reappear(self,snake,position):
@@ -45,15 +53,20 @@ class GameBoard:
 		return (x,y)
 		
 
-	def IsValidPoint(self,point, testSnake = None):
+	def IsValidPoint(self,point, ignoreHead = False):
 		for snake in self.Snakes:
-			if snake.IsSnake(point, testSnake):
+			if snake.IsSnake(point, ignoreHead):
 				return False
 		# if point[0] < 0 or point[1] < 0:
 		# 	return False
 		# if point[0] >= GameBoard.SIZE_X or point[1] >= GameBoard.SIZE_Y:
 		# 	return False
 		return True
+
+	def CheckCrashes(self,snake,coord):
+		for s in self.Snakes:
+			if s is snake:
+				continue
 
 	def SamplePoint(self):
 		while True:  # very slow if snake is long

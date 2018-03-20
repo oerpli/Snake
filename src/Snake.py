@@ -13,8 +13,10 @@ class Snake:
 		self.Grow = False
 		self.Direction = initDirection
 		self.Segments = deque()
+		pos = (X,Y)
 		for i in range(Snake.INIT_SIZE):
-			self.Segments.append((X+i+1, Y))
+			pos = Direction.AddToPoint(pos,initDirection)
+			self.Segments.append(pos)
 		self.NewDirection = None
 		self.DoesLive = True
 
@@ -47,9 +49,15 @@ class Snake:
 		for elems in self.Segments:
 			yield elems
 
-	def IsSnake(self, coords, snake = None):
-		if coords in self.GetCoordinates():
-			if self == snake:
-				if self.Segments[-1] == coords:
-					return False
-			return True
+	def IsSnake(self, coords, ignoreHead = False):
+		if ignoreHead:
+			x = self.Segments.pop()
+			r = coords in self.GetCoordinates()
+			self.Segments.append(x)
+			return r
+		return coords in self.GetCoordinates()
+		# if coords in self.GetCoordinates():
+		# 	if self == snake:
+		# 		if self.Segments[-1] == coords:
+		# 			return False
+		# 	return True
