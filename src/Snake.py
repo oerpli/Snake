@@ -48,7 +48,7 @@ class Snake:
 			yield elems
 
 	def IsSnake(self, coords, snake = None):
-		if coords in self.GetCoordinates()
+		if coords in self.GetCoordinates():
 			if self == snake:
 				if self.Segments[-1] == coords:
 					return False
