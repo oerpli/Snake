@@ -3,14 +3,15 @@ from Snake import *
 from Direction import *
 
 class GameBoard:
-	SIZE_X = 42
-	SIZE_Y = 42
+	SIZE_X = 30
+	SIZE_Y = 30
 
 	def __init__(self):
 		self.Snake = Snake(GameBoard.SIZE_X // 2, GameBoard.SIZE_Y // 2)
 		self.Food = (0,0)
 		self.GenerateFood()
 		self.Grow = False
+		self.score = 0
 	
 	def ClearConsole(self):
 		os.system('cls' if os.name == 'nt' else 'clear')
@@ -33,12 +34,12 @@ class GameBoard:
 			self.Grow = True
 			self.GenerateFood()
 			newFood = self.Food
-		newFront = self.Reappear(newFront)
-		
+  		newFront = self.Reappear(newFront)
+			self.score += 1	
 
 		doesLive = doesLive and self.IsValidPoint(newFront)
 
-		return (oldEnd,newFront,doesLive,newFood)
+		return (oldEnd,newFront,doesLive,self.score,newFood)
 
 	def Reappear(self,position):
 		(x,y) = position
