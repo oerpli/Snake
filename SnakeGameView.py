@@ -6,17 +6,16 @@ from Snake import *
 import time
 
 class SnakeGameView:
-	SNAKE_WIDTH = 10
+	SNAKE_WIDTH = 14
 	REDRAW_DELAY = 1000//60# 60FPS
 	GAME_DELAY = 125
 	GAME_OVER = False
 
 	def __init__(self):
 		self.window = tk.Tk()
-		self.window.title("Snake")
 		
 		self.canvas = tk.Canvas(self.window, bg="grey", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
-		self.labels = []
+		self.gameInfoLabel = tk.Label(self.window)
 
 		self.startGame()
 
@@ -66,7 +65,8 @@ class SnakeGameView:
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate)
 
 	def gameLoop(self):
-		(oldEnd, newFront, doesLive, newFood) = self.Game.Step(self.Direction)
+		(oldEnd, newFront, doesLive, score, newFood) = self.Game.Step(self.Direction)
+		self.score = score
 
 		if not doesLive:
 			self.handleGameOver()
@@ -74,25 +74,27 @@ class SnakeGameView:
 			self.canvas.delete("all")
 			self.drawSnake(self.Game.Snake.GetCoordinates())
 			self.drawFood(self.Game.Food)
+			self.updateGameInfo(score)
 			self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
 
 	def handleGameOver(self):
-		self.labels.append(tk.Label(self.window, text="Game Over"))
-		self.labels.append(tk.Label(self.window, text="Press space to restart"))
-
-		for label in self.labels:
-			label.pack()
+		self.updateGameInfo(self.score, gameOver = True)
 
 		SnakeGameView.GAME_OVER = True
 
+	def updateGameInfo(self, score = 0, gameOver = False):
+		if not gameOver:
+			self.gameInfoLabel.config(text = "Current Score: " + str(score), fg="black")
+		else:
+			self.gameInfoLabel.config(text = "Game Over - Final Score: " + str(score) + " - Press Space to Restart", fg="red")
+			
+		self.gameInfoLabel.pack()
+
 	def startGame(self):
+		self.score = 0
 		self.canvas.delete("all")
 		SnakeGameView.GAME_OVER = False
 
-		for label in self.labels:
-			label.destroy()
-		
-		self.labels.clear()
 
 		self.Game = GameBoard()
 		self.drawSnake(self.Game.Snake.GetCoordinates())
