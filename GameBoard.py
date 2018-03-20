@@ -34,11 +34,20 @@ class GameBoard:
 			self.Grow = True
 			self.GenerateFood()
 			newFood = self.Food
-			self.score += 1
-		
+			self.score += 1	
+
+		newFront = self.Reappear(newFront)
 		doesLive = doesLive and self.IsValidPoint(newFront)
 
 		return (oldEnd,newFront,doesLive,self.score,newFood)
+
+	def Reappear(self,position):
+		(x,y) = position
+		x = (x + GameBoard.SIZE_X) % GameBoard.SIZE_X
+		y = (y + GameBoard.SIZE_Y) % GameBoard.SIZE_Y
+		self.Snake.Segments[-1] = (x,y)
+		return (x,y)
+		
 
 	def IsValidPoint(self,point):
 		if point[0] < 0 or point[1] < 0:
