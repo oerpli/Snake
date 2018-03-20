@@ -68,32 +68,42 @@ class SnakeGameView:
 	def gameLoop(self):
 		(self.snakes, self.food) = self.Game.Step()
 
+		for snake in self.snakes:
+			if not snake.IsAlive():
+				self.handleGameOver()
+				return
+
 		self.canvas.delete("all")
 		self.drawSnakes(self.snakes)
 		self.drawFood(self.food)
 		self.canvas.pack()
 
-		for snake in self.snakes:
-			print("snake alive " + str(snake.IsAlive()))
-			if not snake.IsAlive():
-				self.handleGameOver()
-				return
-
-		# self.updateGameInfo(score)
+		self.updateGameInfo()
 		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
 
 	def handleGameOver(self):
-		# self.updateGameInfo(self.score, gameOver = True)
+		self.updateGameInfo(gameOver = True)
 
 		SnakeGameView.GAME_OVER = True
 
 	def updateGameInfo(self, score = 0, gameOver = False):
-		if not gameOver:
-			self.gameInfoLabel.config(text = "Current Score: " + str(score), fg="black")
+		scores = self.getScoreString()
+
+		if gameOver:
+			self.gameInfoLabel.config(text = "Game Over - {} - Press Space to Restart".format(scores), fg="red")
 		else:
-			self.gameInfoLabel.config(text = "Game Over - Final Score: " + str(score) + " - Press Space to Restart", fg="red")
+			self.gameInfoLabel.config(text = scores, fg="black")
 			
 		self.gameInfoLabel.pack()
+
+	def getScoreString(self):
+		i = 65
+		scoresStrings = []
+		for snake in self.snakes:
+			scoresStrings.append("Snake {}: {}".format(chr(i), snake.Score))
+			i += 1
+
+		return "; ".join(scoresStrings)
 
 	def startGame(self):
 		self.score = 0
@@ -108,8 +118,6 @@ class SnakeGameView:
 		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop) 
 
 	def keyPressed(self, event):
-		print("key {} pressed".format(event.keysym))
-		
 		if SnakeGameView.GAME_OVER and event.keysym == 'space':
 			self.startGame()
 			return
