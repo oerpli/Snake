@@ -73,10 +73,11 @@ class SnakeGameView:
 		self.drawFood(self.food)
 		self.canvas.pack()
 
-		# for snake in self.snakes:
-		# 	if not snake.IsAlive():
-		# 		self.handleGameOver()
-		# 		return
+		for snake in self.snakes:
+			print("snake alive " + str(snake.IsAlive()))
+			if not snake.IsAlive():
+				self.handleGameOver()
+				return
 
 		# self.updateGameInfo(score)
 		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
