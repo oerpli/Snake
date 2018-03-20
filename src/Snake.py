@@ -39,6 +39,7 @@ class Snake:
 		# end = None
 		if not self.Grow:
 			end = self.Segments.popleft()
+		else:
 			self.Grow = False
 		return new # step successful
 
