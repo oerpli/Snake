@@ -39,6 +39,7 @@ class Snake:
 		# end = None
 		if not self.Grow:
 			end = self.Segments.popleft()
+		else:
 			self.Grow = False
 		return new # step successful
 
@@ -47,4 +48,4 @@ class Snake:
 			yield elems
 
 	def IsSnake(self, coords):
-		return coords in self.GetCoordinates()
+		return coords in self.GetCoordinates()[:-1]
