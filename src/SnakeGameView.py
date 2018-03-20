@@ -66,24 +66,23 @@ class SnakeGameView:
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate)
 
 	def gameLoop(self):
-		(self.snakes, newFood) = self.Game.Step()
+		(self.snakes, self.food) = self.Game.Step()
 
-		# if not doesLive:
-			# self.handleGameOver()
-		# else:
 		self.canvas.delete("all")
 		self.drawSnakes(self.snakes)
+		self.drawFood(self.food)
 		self.canvas.pack()
 
-		# if newFood is not None:
-			# self.Food = newFood
-			
-		# self.drawFood(self.Food)
+		# for snake in self.snakes:
+		# 	if not snake.IsAlive():
+		# 		self.handleGameOver()
+		# 		return
+
 		# self.updateGameInfo(score)
 		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
 
 	def handleGameOver(self):
-		self.updateGameInfo(self.score, gameOver = True)
+		# self.updateGameInfo(self.score, gameOver = True)
 
 		SnakeGameView.GAME_OVER = True
 
