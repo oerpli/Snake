@@ -14,7 +14,7 @@ class SnakeGameView:
 	def __init__(self):
 		self.window = tk.Tk()
 		
-		self.canvas = tk.Canvas(self.window, bg="grey", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
+		self.canvas = tk.Canvas(self.window, bg="#333", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
 		self.gameInfoLabel = tk.Label(self.window)
 
 		self.startGame()
@@ -25,16 +25,20 @@ class SnakeGameView:
 		self.window.mainloop()
 
 	def drawSnakes(self, snakes):
+		colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
+		i = 0
 		for snake in snakes:
+			color = colors[i]
+			i += 1
 			for rect in snake.GetCoordinates():
 				x = rect[0] * SnakeGameView.SNAKE_WIDTH
 				y = rect[1] * SnakeGameView.SNAKE_WIDTH
-				self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="black")
+				self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill=color, width=0)
 
 	def drawFood(self, rect):
 		x = rect[0] * SnakeGameView.SNAKE_WIDTH
 		y = rect[1] * SnakeGameView.SNAKE_WIDTH
-		self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="red")
+		self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="red", width=0)
 
 	def addPoint(self, point, drawingDirection):
 		# adds a new point and prepares it to be rendered in the animate function
