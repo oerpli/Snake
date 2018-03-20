@@ -28,11 +28,11 @@ class GameBoard:
 		for snake in self.Snakes:
 			newFront = snake.Move()
 			newFronts.append(newFront)
+			newFront = self.Reappear(snake,newFront)
 			if newFront == self.Food:
 				snake.Grow = True
 				snake.IncrementScore()	
 				newFood = True
-			newFront = self.Reappear(snake,newFront)
 			if not self.IsValidPoint(newFront, True):
 				snake.Kill()
 		if newFood:
