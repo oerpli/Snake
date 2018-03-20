@@ -52,3 +52,4 @@ class Snake:
 			if self == snake:
 				if self.Segments[-1] == coords:
 					return False
+			return True

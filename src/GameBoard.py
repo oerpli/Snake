@@ -45,14 +45,14 @@ class GameBoard:
 		return (x,y)
 		
 
-	def IsValidPoint(self,point, testStnake = None):
+	def IsValidPoint(self,point, testSnake = None):
 		for snake in self.Snakes:
-			if snake.IsSnake(point, testStnake):
+			if snake.IsSnake(point, testSnake):
 				return False
-		if point[0] < 0 or point[1] < 0:
-			return False
-		if point[0] >= GameBoard.SIZE_X or point[1] >= GameBoard.SIZE_Y:
-			return False
+		# if point[0] < 0 or point[1] < 0:
+		# 	return False
+		# if point[0] >= GameBoard.SIZE_X or point[1] >= GameBoard.SIZE_Y:
+		# 	return False
 		return True
 
 	def SamplePoint(self):
