@@ -3,8 +3,8 @@ from Snake import *
 from Direction import *
 
 class GameBoard:
-	SIZE_X = 42
-	SIZE_Y = 42
+	SIZE_X = 30
+	SIZE_Y = 30
 
 	def __init__(self):
 		self.Snake = Snake(GameBoard.SIZE_X // 2, GameBoard.SIZE_Y // 2)

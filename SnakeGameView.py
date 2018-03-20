@@ -6,7 +6,7 @@ from Snake import *
 import time
 
 class SnakeGameView:
-	SNAKE_WIDTH = 10
+	SNAKE_WIDTH = 14
 	REDRAW_DELAY = 1000//60# 60FPS
 	GAME_DELAY = 125
 	GAME_OVER = False
