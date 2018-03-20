@@ -31,7 +31,7 @@ class GameBoard:
 				snake.IncrementScore()	
 				newFood = True
 			newFront = self.Reappear(snake,newFront)
-			if not self.IsValidPoint(newFront):
+			if not self.IsValidPoint(newFront, snake):
 				snake.Kill()
 		if newFood:
 			self.GenerateFood()
@@ -45,9 +45,9 @@ class GameBoard:
 		return (x,y)
 		
 
-	def IsValidPoint(self,point):
+	def IsValidPoint(self,point, testStnake = None):
 		for snake in self.Snakes:
-			if snake.IsSnake(point):
+			if snake.IsSnake(point, testStnake):
 				return False
 		if point[0] < 0 or point[1] < 0:
 			return False
