@@ -23,19 +23,19 @@ class GameBoard:
 		# n if snake grows (coords)
 		# Bool if gamestate is still valid
 		# nf = None or coords of new food
-
-		newFood = None
+		newFood = False
 		for snake in self.Snakes:
-			(oldEnd, newFront, doesLive) = snake.Move(self.Grow)
-			self.Grow = False
+			newFront = snake.Move()
 			if newFront == self.Food:
-				self.Grow = True
-				self.GenerateFood()
-				newFood = self.Food
+				snake.Grow = True
 				snake.IncrementScore()	
+				newFood = True
 			newFront = self.Reappear(snake,newFront)
-			doesLive = doesLive and self.IsValidPoint(newFront)
-		return (self.Snakes,newFood)
+			if not self.IsValidPoint(newFront):
+				snake.Kill()
+		if newFood:
+			self.GenerateFood()
+		return (self.Snakes,self.Food)
 
 	def Reappear(self,snake,position):
 		(x,y) = position
@@ -64,3 +64,4 @@ class GameBoard:
 
 	def GenerateFood(self):
 		self.Food = self.SamplePoint()
+		return self.Food

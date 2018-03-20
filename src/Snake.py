@@ -10,30 +10,37 @@ class Snake:
 
 	def __init__(self, X, Y, initDirection):
 		self.Score = 0
+		self.Grow = False
 		self.Direction = initDirection
 		self.Segments = deque()
 		for i in range(Snake.INIT_SIZE):
 			self.Segments.append((X+i+1, Y))
 		self.NewDirection = None
+		self.DoesLive = True
 
 	def IncrementScore(self):
 		self.Score += 1
 
-	def Move(self, grow = False):
-		# Returns tuple (old end of snake, new front of snake, doesLive)
+	def Kill(self):
+		self.DoesLive = False
+
+	def IsAlive(self):
+		return self.DoesLive
+
+	def Move(self):
+		# Returns new position of front
 		if self.NewDirection is not None:
 			if Direction.ValidNewDirection(self.Direction,self.NewDirection):
 				self.Direction = self.NewDirection
-		last = self.Segments.pop()
-		new = Direction.AddToPoint(last, self.Direction)
-		self.Segments.append(last)
-		if new in self.Segments:
-			return (None,new,False) # snake died
+		# last = self.Segments.pop()
+		new = Direction.AddToPoint(self.Segments[-1], self.Direction)
+		# self.Segments.append(last)
 		self.Segments.append(new)
-		end = None
-		if not grow:
+		# end = None
+		if not self.Grow:
 			end = self.Segments.popleft()
-		return (end,new,True) # step successful
+			self.Grow = False
+		return new # step successful
 
 	def GetCoordinates(self):
 		for elems in self.Segments:
