@@ -14,7 +14,9 @@ class Snake:
 		for i in range(Snake.INIT_SIZE):
 			self.Segments.appendleft((X-i, Y))
 
-	def Move(self, direction = None, grow=False):
+	def Move(self, direction = None, grow = False):
+		# Returns tuple (old end of snake, new front of snake, doesLive)
+
 		if direction is not None:
 			self.Direction = direction
 		last = self.Segments.pop()
