@@ -64,11 +64,3 @@ class GameBoard:
 
 	def GenerateFood(self):
 		self.Food = self.SamplePoint()
-
-	def __str__(self): # printer for debugging in console
-		fields = [list("_"*GameBoard.SIZE_Y) for _ in range(GameBoard.SIZE_X)]
-		for (x, y) in self.Snake.GetCoordinates():
-			fields[y][x] = 'X'
-		(fX, fY) = self.Food
-		fields[fY][fX] = 'O'
-		return "\n".join(["".join(line) for line in reversed(fields)])
