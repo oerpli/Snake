@@ -24,11 +24,12 @@ class SnakeGameView:
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
 		self.window.mainloop()
 
-	def drawSnake(self, snake):
-		for rect in snake.GetCoordinates():
-			x = rect[0] * SnakeGameView.SNAKE_WIDTH
-			y = rect[1] * SnakeGameView.SNAKE_WIDTH
-			self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="black")
+	def drawSnakes(self, snakes):
+		for snake in snakes:
+			for rect in snake.GetCoordinates():
+				x = rect[0] * SnakeGameView.SNAKE_WIDTH
+				y = rect[1] * SnakeGameView.SNAKE_WIDTH
+				self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="black")
 
 	def drawFood(self, rect):
 		x = rect[0] * SnakeGameView.SNAKE_WIDTH
@@ -65,18 +66,21 @@ class SnakeGameView:
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate)
 
 	def gameLoop(self):
-		(oldEnd, newFront, doesLive, score, newFood) = self.Game.Step(self.Direction)
-		self.score = score
+		(self.snakes, newFood) = self.Game.Step()
 
-		if not doesLive:
-			self.handleGameOver()
-		else:
-			self.canvas.delete("all")
+		# if not doesLive:
+			# self.handleGameOver()
+		# else:
+		self.canvas.delete("all")
+		self.drawSnakes(self.snakes)
+		self.canvas.pack()
 
-			self.drawSnake(self.Game.Snake.GetCoordinates())
-			self.drawFood(self.Game.Food)
-			self.updateGameInfo(score)
-			self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
+		# if newFood is not None:
+			# self.Food = newFood
+			
+		# self.drawFood(self.Food)
+		# self.updateGameInfo(score)
+		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
 
 	def handleGameOver(self):
 		self.updateGameInfo(self.score, gameOver = True)
@@ -96,20 +100,12 @@ class SnakeGameView:
 		self.canvas.delete("all")
 		SnakeGameView.GAME_OVER = False
 
-		self.snakes = [Snake(GameBoard.SIZE_X // 2, GameBoard.SIZE_Y // 2),
-				  Snake(((GameBoard.SIZE_X // 2)), ((GameBoard.SIZE_Y // 2) + 2))]
-
 		self.Game = GameBoard()
 
-		for snake in self.snakes:
-			self.drawSnake(snake)
-		self.canvas.pack()
-
-		self.Direction = self.Game.Snake.Direction
 		# self.addPoint((3,2), 'RIGHT')
 		self.currentRect = None
 
-		# self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop) 
+		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop) 
 
 	def keyPressed(self, event):
 		print("key {} pressed".format(event.keysym))
@@ -119,21 +115,21 @@ class SnakeGameView:
 			return
 
 		if (event.keysym == 'Right'):
-			self.snakes[0].Direction = Direction.RIGHT
+			self.snakes[0].NewDirection = Direction.RIGHT
 		elif (event.keysym == 'Left'):
-			self.snakes[0].Direction = Direction.LEFT
+			self.snakes[0].NewDirection = Direction.LEFT
 		elif (event.keysym == 'Down'):
-			self.snakes[0].Direction = Direction.UP
+			self.snakes[0].NewDirection = Direction.UP
 		elif event.keysym == 'Up':
-			self.snakes[0].Direction = Direction.DOWN
+			self.snakes[0].NewDirection = Direction.DOWN
 		elif event.keysym == 'd':
-			self.snakes[1].Direction = Direction.RIGHT
+			self.snakes[1].NewDirection = Direction.RIGHT
 		elif event.keysym == 'a':
-			self.snakes[1].Direction = Direction.LEFT
+			self.snakes[1].NewDirection = Direction.LEFT
 		elif event.keysym == 's':
-			self.snakes[1].Direction = Direction.UP
+			self.snakes[1].NewDirection = Direction.UP
 		elif event.keysym == 'w':
-			self.snakes[1].Direction = Direction.DOWN
+			self.snakes[1].NewDirection = Direction.DOWN
 
 	# def keyReleased(self, event):
 		# self.moveDirX = 0
