@@ -6,6 +6,19 @@ class Direction(Enum):
 	UP = 2
 	DOWN = 3
 
+
+	@staticmethod
+	def ValidNewDirection(old_dir, new_dir):
+		if old_dir == Direction.LEFT and new_dir == Direction.RIGHT:
+			return False
+		if old_dir == Direction.UP and new_dir == Direction.DOWN:
+			return False
+		if new_dir == Direction.LEFT and old_dir == Direction.RIGHT:
+			return False
+		if new_dir == Direction.UP and old_dir == Direction.DOWN:
+			return False
+		return True
+
 	@staticmethod
 	def DirectionToVector(direction):
 		if direction == Direction.LEFT:
