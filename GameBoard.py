@@ -3,8 +3,8 @@ from Snake import *
 from Direction import *
 
 class GameBoard:
-	SIZE_X = 21
-	SIZE_Y = 21
+	SIZE_X = 42
+	SIZE_Y = 42
 
 	def __init__(self):
 		self.Snake = Snake(GameBoard.SIZE_X // 2, GameBoard.SIZE_Y // 2)
@@ -20,21 +20,23 @@ class GameBoard:
 		print(self)
 
 	def Step(self, dir = None):
-		(e,n,success) = self.Snake.Move(dir, self.Grow)
-		self.Grow = False
-		nf = None
-		if n == self.Food:
-			self.Grow = True
-			self.GenerateFood()
-			nf = self.Food
 		# Return information about new gamestate:
 		# e if a snakeblock is removed (coords)
 		# n if snake grows (coords)
 		# Bool if gamestate is still valid
 		# nf = None or coords of new food
-		return (e,n,success and self.IsValidPoint(n),nf)
 
+		(oldEnd, newFront, doesLive) = self.Snake.Move(dir, self.Grow)
+		self.Grow = False
+		newFood = None
+		if newFront == self.Food:
+			self.Grow = True
+			self.GenerateFood()
+			newFood = self.Food
+		
+		doesLive = doesLive and self.IsValidPoint(newFront)
 
+		return (oldEnd,newFront,doesLive,newFood)
 
 	def IsValidPoint(self,point):
 		if point[0] < 0 or point[1] < 0:

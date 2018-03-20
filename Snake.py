@@ -14,15 +14,18 @@ class Snake:
 		for i in range(Snake.INIT_SIZE):
 			self.Segments.appendleft((X-i, Y))
 
-	def Move(self, direction = None, grow=False):
+	def Move(self, direction = None, grow = False):
+		# Returns tuple (old end of snake, new front of snake, doesLive)
 		if direction is not None:
-			self.Direction = direction
+			if Direction.ValidNewDirection(self.Direction,direction):
+				self.Direction = direction
 		last = self.Segments.pop()
 		new = Direction.AddToPoint(last, self.Direction)
 		self.Segments.append(last)
 		if new in self.Segments:
 			return (None,new,False) # snake died
 		self.Segments.append(new)
+		end = None
 		if not grow:
 			end = self.Segments.popleft()
 		return (end,new,True) # step successful
