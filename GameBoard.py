@@ -43,8 +43,8 @@ class GameBoard:
 
 	def Reappear(self,position):
 		(x,y) = position
-		x = (x + GameBoard.SIZE_X)  
-		y = (y + GameBoard.SIZE_Y)
+		x = (x + GameBoard.SIZE_X) % GameBoard.SIZE_X
+		y = (y + GameBoard.SIZE_Y) % GameBoard.SIZE_Y
 		self.Snake.Segments[-1] = (x,y)
 		return (x,y)
 		
