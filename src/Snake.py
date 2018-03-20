@@ -16,8 +16,9 @@ class Snake:
 			self.Segments.append((X+i+1, Y))
 		self.NewDirection = None
 
-	def IncrementScore():
+	def IncrementScore(self):
 		self.Score += 1
+
 	def Move(self, grow = False):
 		# Returns tuple (old end of snake, new front of snake, doesLive)
 		if self.NewDirection is not None:
