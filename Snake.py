@@ -16,9 +16,9 @@ class Snake:
 
 	def Move(self, direction = None, grow = False):
 		# Returns tuple (old end of snake, new front of snake, doesLive)
-
 		if direction is not None:
-			self.Direction = direction
+			if Direction.ValidNewDirection(self.Direction,direction):
+				self.Direction = direction
 		last = self.Segments.pop()
 		new = Direction.AddToPoint(last, self.Direction)
 		self.Segments.append(last)
