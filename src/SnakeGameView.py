@@ -4,7 +4,7 @@ from collections import deque
 from Direction import *
 from GameBoard import *
 from Snake import *
-from pylab import *
+
 import time
 
 class SnakeGameView:
