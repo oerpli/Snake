@@ -20,6 +20,9 @@ class SnakeGameView:
 		self.gameInfoLabel = tk.Label(self.window)
 		self.numPlayers = 4
 		self.shouldStartNewGame = False
+		self.foodDrawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH)
+		self.foodDrawer.GetColor = (lambda : "red")
+		self.food = None
 		self.startGame()
 		self.initKeyDict()
 		self.window.bind_all("<Key>", self.keyPressed)
@@ -61,8 +64,10 @@ class SnakeGameView:
 			self.shouldStartNewGame = False
 			self.startGame()
 			return
-		(self.snakes, self.food) = self.Game.Step()
-
+		(self.snakes, newFood) = self.Game.Step()
+		if self.food is not newFood:
+			self.food = newFood
+			self.food.InitDrawer(self.foodDrawer)
 		for snake in self.snakes:
 			if not snake.IsAlive():
 				self.handleGameOver()
@@ -108,7 +113,7 @@ class SnakeGameView:
 		self.canvas.delete("all")
 		SnakeGameView.GAME_OVER = False
 		self.Game = GameBoard(self.numPlayers)
-		self.Game.Food.InitDrawer(RectangleDrawer(self.canvas,self.SNAKE_WIDTH))
+		self.Game.Food.InitDrawer(self.foodDrawer)
 		self.snakes = self.Game.GetSnakes()
 		for snake in self.snakes:
 			drawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH)
