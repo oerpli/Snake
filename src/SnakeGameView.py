@@ -60,11 +60,30 @@ class SnakeGameView:
 
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate)
 
-	def gameLoop(self):
-		if self.shouldStartNewGame:
-			self.shouldStartNewGame = False
-			self.startGame()
-			return
+    from interface import shouldStartNewGame {
+        public def gameLoop(self)
+    }
+        public class shouldStartNewGame implements State {
+
+            public def gameLoop(self) {
+                System.out.print("START GAME")
+                self.setState(this)
+            }
+            public String toString(){
+            return "shouldStartNewGame"
+            }
+        }
+        public class handleGameOver implements State {
+            public def gameLoop(self) {
+                System.out.print("GAME OVER")
+                self.setState(this)
+            }
+            public String toString(){
+                return "handleGameOver"
+            }
+        }
+        
+
 		(self.snakes, newFood) = self.Game.Step()
 		if self.food is not newFood:
 			self.food = newFood
