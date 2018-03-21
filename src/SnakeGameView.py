@@ -3,6 +3,7 @@ from collections import deque
 from Direction import *
 from GameBoard import *
 from Snake import *
+from pylab import *
 import time
 
 class SnakeGameView:
@@ -16,16 +17,23 @@ class SnakeGameView:
 		
 		self.canvas = tk.Canvas(self.window, bg="#333", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
 		self.gameInfoLabel = tk.Label(self.window)
-		self.numPlayers = 1
+		self.numPlayers = 4
+		self.shouldStartNewGame = False
 		self.startGame()
 		self.initKeyDict()
 		self.window.bind_all("<Key>", self.keyPressed)
 		# self.window.bind_all("<KeyRelease>", self.keyReleased)
-		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
+		self.fnCall = self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
 		self.window.mainloop()
 
 	def drawSnakes(self, snakes):
 		colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
+		cmap = cm.get_cmap('viridis', 4)    # PiYG
+		colors = []
+		for i in range(cmap.N):
+			rgb = cmap(i)[:3] # will return rgba, we take only first 3 so we get rgb
+			colors.append(matplotlib.colors.rgb2hex(rgb))
+		# colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
 		i = 0
 		for snake in snakes:
 			color = colors[i]
@@ -70,6 +78,10 @@ class SnakeGameView:
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate)
 
 	def gameLoop(self):
+		if self.shouldStartNewGame:
+			self.shouldStartNewGame = False
+			self.startGame()
+			return
 		(self.snakes, self.food) = self.Game.Step()
 
 		for snake in self.snakes:
@@ -125,14 +137,21 @@ class SnakeGameView:
 		if SnakeGameView.GAME_OVER and event.keysym == 'space':
 			self.startGame()
 			return
-		if SnakeGameView.GAME_OVER and event.keysym == '1':
+		if event.keysym == '1':
 			self.numPlayers = 1
+			self.shouldStartNewGame = True
 			return
-		if SnakeGameView.GAME_OVER and event.keysym == '2':
+		if event.keysym == '2':
 			self.numPlayers = 2
+			self.shouldStartNewGame = True
 			return
-		if SnakeGameView.GAME_OVER and event.keysym == '3':
+		if event.keysym == '3':
 			self.numPlayers = 3
+			self.shouldStartNewGame = True
+			return
+		if event.keysym == '4':
+			self.numPlayers = 4
+			self.shouldStartNewGame = True
 			return
 		
 		key = self.KeyDict.get(event.keysym, None)
@@ -144,10 +163,12 @@ class SnakeGameView:
 		P0 = ['Up','Down','Left','Right']
 		P1 = list('wsad')
 		P2 = list('ikjl')
+		P3 = list('tgfh')
 		p0d = self.playerKeyDict(P0,0)
 		p1d = self.playerKeyDict(P1,1)
 		p2d = self.playerKeyDict(P2,2)
-		self.KeyDict = {**p0d, **p1d, **p2d}
+		p3d = self.playerKeyDict(P3,3)
+		self.KeyDict = {**p0d, **p1d, **p2d, **p3d}
 
 		
 	def playerKeyDict(self, keys, playerNumber):
