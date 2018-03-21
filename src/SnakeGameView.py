@@ -82,6 +82,33 @@ class SnakeGameView:
                 return "handleGameOver"
             }
         }
+	public class self {
+            private State state
+                
+            public self() {
+                shouldStartNewGame = False
+            }
+            public def setState(State shouldStartNewGame){
+                this.shouldStartNewGame = shouldStartNewGame
+                }
+            public State getState() {
+                return shouldStartNewGame
+        }
+        public class StatePattern {
+            public static def main(String[] args) {
+                self Self = new self()
+
+                shouldStartNewGame ShouldStartNewGame = new shouldStartNewGame()
+                ShouldStartNewGame.gameLoop(self)
+
+                System.out.print(self.getState().toString())
+
+                handleGameOver HandleGameOver = new handleGameOver()
+                HandleGameOver.gemeLoop(self)
+
+                System.out.print(self.getState().toString())
+            }
+	}
         
 
 		(self.snakes, newFood) = self.Game.Step()
