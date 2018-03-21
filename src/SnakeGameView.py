@@ -4,7 +4,6 @@ from collections import deque
 from Direction import *
 from GameBoard import *
 from Snake import *
-from pylab import *
 import time
 
 class SnakeGameView:
@@ -26,11 +25,6 @@ class SnakeGameView:
 		# self.window.bind_all("<KeyRelease>", self.keyReleased)
 		self.fnCall = self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
 		self.window.mainloop()
-
-	def drawFood(self, rect):
-		x = rect[0] * SnakeGameView.SNAKE_WIDTH
-		y = rect[1] * SnakeGameView.SNAKE_WIDTH
-		self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="red", width=0)
 
 	def addPoint(self, point, drawingDirection):
 		# adds a new point and prepares it to be rendered in the animate function
@@ -76,7 +70,7 @@ class SnakeGameView:
 		self.canvas.delete("all")
 		for snake in self.snakes:
 			snake.Draw()
-		self.drawFood(self.food.position)
+		self.food.Draw()
 		self.canvas.pack()
 
 		self.updateGameInfo()
@@ -111,6 +105,7 @@ class SnakeGameView:
 		self.canvas.delete("all")
 		SnakeGameView.GAME_OVER = False
 		self.Game = GameBoard(self.numPlayers)
+		self.Game.Food.InitDrawer(RectangleDrawer(self.canvas,self.SNAKE_WIDTH))
 		self.snakes = self.Game.GetSnakes()
 		for snake in self.snakes:
 			drawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH)

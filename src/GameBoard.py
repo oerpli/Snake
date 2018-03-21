@@ -1,13 +1,7 @@
 import random
 from Snake import *
 from Direction import *
-
-class Food:
-	def __init__(self, position):
-		self.position = position
-	def IsThere (self, position):
-		return self.position == position
-
+from Food import *
 
 class GameBoard:
 	SIZE_X = 30

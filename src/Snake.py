@@ -11,6 +11,7 @@ class Snake(Drawable):
 	SPEED = 1
 
 	def __init__(self, X, Y, initDirection):
+		super().__init__()
 		self.Score = 0
 		self.Grow = False
 		self.Direction = initDirection
@@ -22,11 +23,8 @@ class Snake(Drawable):
 		self.NewDirection = None
 		self.DoesLive = True
 
-	def InitDrawer(self, drawer):
-		self.Drawer = drawer
-
 	def Draw(self):
-		self.Drawer.Draw(self.Segments)
+		self.GetDrawer().Draw(self.Segments)
 
 	def IncrementScore(self):
 		self.Score += 1
