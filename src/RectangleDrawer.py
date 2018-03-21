@@ -1,4 +1,6 @@
 from pylab import cm
+import matplotlib
+
 class RectangleDrawer:
 	def __init__(self, canvas, rectangleWidth):
 		self.Width = rectangleWidth
@@ -8,7 +10,7 @@ class RectangleDrawer:
 	def GetColor(self):
 		return "black"
 
-	def draw(self, rectangleIterator):
+	def Draw(self, rectangleIterator):
 		for (x,y) in rectangleIterator:
 			x *= self.Width
 			y *= self.Width

@@ -3,8 +3,10 @@ import os
 from enum import Enum
 from collections import deque
 from Direction import *
+from RectangleDrawer import *
+from Drawable import *
 
-class Snake:
+class Snake(Drawable):
 	INIT_SIZE = 3
 	SPEED = 1
 
@@ -19,6 +21,12 @@ class Snake:
 			self.Segments.append(pos)
 		self.NewDirection = None
 		self.DoesLive = True
+
+	def InitDrawer(self, drawer):
+		self.Drawer = drawer
+
+	def Draw(self):
+		self.Drawer.Draw(self.Segments)
 
 	def IncrementScore(self):
 		self.Score += 1

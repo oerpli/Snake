@@ -17,6 +17,9 @@ class GameBoard:
 		self.Grow = False
 		self.score = 0
 	
+	def GetSnakes(self):
+		return self.Snakes
+
 	def Step(self):
 		# Return information about new gamestate:
 		# e if a snakeblock is removed (coords)

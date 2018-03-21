@@ -1,3 +1,4 @@
+from RectangleDrawer import *
 import tkinter as tk
 from collections import deque
 from Direction import *
@@ -15,7 +16,7 @@ class SnakeGameView:
 	def __init__(self):
 		self.window = tk.Tk()
 		
-		self.canvas = tk.Canvas(self.window, bg="#333", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
+		self.canvas = tk.Canvas(self.window, bg="#666", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
 		self.gameInfoLabel = tk.Label(self.window)
 		self.numPlayers = 4
 		self.shouldStartNewGame = False
@@ -25,23 +26,6 @@ class SnakeGameView:
 		# self.window.bind_all("<KeyRelease>", self.keyReleased)
 		self.fnCall = self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
 		self.window.mainloop()
-
-	def drawSnakes(self, snakes):
-		colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
-		cmap = cm.get_cmap('viridis', 4)    # PiYG
-		colors = []
-		for i in range(cmap.N):
-			rgb = cmap(i)[:3] # will return rgba, we take only first 3 so we get rgb
-			colors.append(matplotlib.colors.rgb2hex(rgb))
-		# colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
-		i = 0
-		for snake in snakes:
-			color = colors[i]
-			i += 1
-			for rect in snake.GetCoordinates():
-				x = rect[0] * SnakeGameView.SNAKE_WIDTH
-				y = rect[1] * SnakeGameView.SNAKE_WIDTH
-				self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill=color, width=0)
 
 	def drawFood(self, rect):
 		x = rect[0] * SnakeGameView.SNAKE_WIDTH
@@ -90,7 +74,8 @@ class SnakeGameView:
 				return
 
 		self.canvas.delete("all")
-		self.drawSnakes(self.snakes)
+		for snake in self.snakes:
+			snake.Draw()
 		self.drawFood(self.food)
 		self.canvas.pack()
 
@@ -125,9 +110,11 @@ class SnakeGameView:
 		self.score = 0
 		self.canvas.delete("all")
 		SnakeGameView.GAME_OVER = False
-
 		self.Game = GameBoard(self.numPlayers)
-
+		self.snakes = self.Game.GetSnakes()
+		for snake in self.snakes:
+			drawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH)
+			snake.InitDrawer(drawer)
 		# self.addPoint((3,2), 'RIGHT')
 		self.currentRect = None
 
