@@ -91,7 +91,7 @@ class SnakeGameView:
 
 		self.canvas.delete("all")
 		self.drawSnakes(self.snakes)
-		self.drawFood(self.food)
+		self.drawFood(self.food.position)
 		self.canvas.pack()
 
 		self.updateGameInfo()

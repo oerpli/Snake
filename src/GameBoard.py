@@ -2,9 +2,17 @@ import random
 from Snake import *
 from Direction import *
 
+class Food:
+	def __init__(self, position):
+		self.position = position
+	def IsThere (self, position):
+		return self.position == position
+
+
 class GameBoard:
 	SIZE_X = 30
 	SIZE_Y = 30
+	
 
 	def __init__(self, numSnakes = 3):
 		self.Snakes = []
@@ -12,7 +20,7 @@ class GameBoard:
 
 		dirs = [Direction.LEFT,Direction.RIGHT,Direction.UP,Direction.DOWN]
 		self.Snakes = [Snake(cX,cY,initDir) for initDir in dirs[:numSnakes]]
-		self.Food = (0,0)
+		self.Food = Food((0,0))
 		self.GenerateFood()
 		self.Grow = False
 		self.score = 0
@@ -29,7 +37,7 @@ class GameBoard:
 			newFront = snake.Move()
 			newFronts.append(newFront)
 			newFront = self.Reappear(snake,newFront)
-			if newFront == self.Food:
+			if self.Food.IsThere(newFront):
 				snake.Grow = True
 				snake.IncrementScore()	
 				newFood = True
@@ -76,5 +84,6 @@ class GameBoard:
 				return (x, y)
 
 	def GenerateFood(self):
-		self.Food = self.SamplePoint()
+		point = self.SamplePoint()
+		self.Food = Food(point)
 		return self.Food
