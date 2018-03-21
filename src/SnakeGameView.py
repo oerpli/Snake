@@ -1,4 +1,5 @@
 from RectangleDrawer import *
+from SingleColorGenerator import *
 import tkinter as tk
 from collections import deque
 from Direction import *

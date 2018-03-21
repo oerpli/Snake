@@ -37,6 +37,7 @@ class GameBoard:
 			if self.Food.IsThere(newFront):
 				snake.Grow = True
 				snake.IncrementScore()	
+				snake.ColorGenerator = SingleColorGenerator("#F00")
 				newFood = True
 			if not self.IsValidPoint(newFront, True):
 				snake.Kill()
