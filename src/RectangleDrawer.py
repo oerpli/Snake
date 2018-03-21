@@ -1,6 +1,3 @@
-from pylab import cm
-import matplotlib
-
 class RectangleDrawer:
 	def __init__(self, canvas, rectangleWidth):
 		self.Width = rectangleWidth
