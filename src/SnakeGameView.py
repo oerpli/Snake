@@ -3,6 +3,7 @@ from collections import deque
 from Direction import *
 from GameBoard import *
 from Snake import *
+from pylab import *
 import time
 
 class SnakeGameView:
@@ -14,26 +15,38 @@ class SnakeGameView:
 	def __init__(self):
 		self.window = tk.Tk()
 		
-		self.canvas = tk.Canvas(self.window, bg="grey", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
+		self.canvas = tk.Canvas(self.window, bg="#333", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
 		self.gameInfoLabel = tk.Label(self.window)
-
+		self.numPlayers = 4
+		self.shouldStartNewGame = False
 		self.startGame()
-
+		self.initKeyDict()
 		self.window.bind_all("<Key>", self.keyPressed)
 		# self.window.bind_all("<KeyRelease>", self.keyReleased)
-		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
+		self.fnCall = self.window.after(SnakeGameView.REDRAW_DELAY, self.animate) 
 		self.window.mainloop()
 
-	def drawSnake(self, points):
-		for rect in points:
-			x = rect[0] * SnakeGameView.SNAKE_WIDTH
-			y = rect[1] * SnakeGameView.SNAKE_WIDTH
-			self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="black")
+	def drawSnakes(self, snakes):
+		colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
+		cmap = cm.get_cmap('viridis', 4)    # PiYG
+		colors = []
+		for i in range(cmap.N):
+			rgb = cmap(i)[:3] # will return rgba, we take only first 3 so we get rgb
+			colors.append(matplotlib.colors.rgb2hex(rgb))
+		# colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
+		i = 0
+		for snake in snakes:
+			color = colors[i]
+			i += 1
+			for rect in snake.GetCoordinates():
+				x = rect[0] * SnakeGameView.SNAKE_WIDTH
+				y = rect[1] * SnakeGameView.SNAKE_WIDTH
+				self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill=color, width=0)
 
 	def drawFood(self, rect):
 		x = rect[0] * SnakeGameView.SNAKE_WIDTH
 		y = rect[1] * SnakeGameView.SNAKE_WIDTH
-		self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="red")
+		self.canvas.create_rectangle(x, y, x + SnakeGameView.SNAKE_WIDTH, y + SnakeGameView.SNAKE_WIDTH, fill="red", width=0)
 
 	def addPoint(self, point, drawingDirection):
 		# adds a new point and prepares it to be rendered in the animate function
@@ -65,42 +78,56 @@ class SnakeGameView:
 		self.window.after(SnakeGameView.REDRAW_DELAY, self.animate)
 
 	def gameLoop(self):
-		(oldEnd, newFront, doesLive, score, newFood) = self.Game.Step(self.Direction)
-		self.score = score
+		if self.shouldStartNewGame:
+			self.shouldStartNewGame = False
+			self.startGame()
+			return
+		(self.snakes, self.food) = self.Game.Step()
 
-		if not doesLive:
-			self.handleGameOver()
-		else:
-			self.canvas.delete("all")
-			self.drawSnake(self.Game.Snake.GetCoordinates())
-			self.drawFood(self.Game.Food)
-			self.updateGameInfo(score)
-			self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
+		for snake in self.snakes:
+			if not snake.IsAlive():
+				self.handleGameOver()
+				return
+
+		self.canvas.delete("all")
+		self.drawSnakes(self.snakes)
+		self.drawFood(self.food)
+		self.canvas.pack()
+
+		self.updateGameInfo()
+		self.window.after(SnakeGameView.GAME_DELAY, self.gameLoop)
 
 	def handleGameOver(self):
-		self.updateGameInfo(self.score, gameOver = True)
+		self.updateGameInfo(gameOver = True)
 
 		SnakeGameView.GAME_OVER = True
 
 	def updateGameInfo(self, score = 0, gameOver = False):
-		if not gameOver:
-			self.gameInfoLabel.config(text = "Current Score: " + str(score), fg="black")
+		scores = self.getScoreString()
+
+		if gameOver:
+			self.gameInfoLabel.config(text = "Game Over - {} - Press Space to Restart".format(scores), fg="red")
 		else:
-			self.gameInfoLabel.config(text = "Game Over - Final Score: " + str(score) + " - Press Space to Restart", fg="red")
+			self.gameInfoLabel.config(text = scores, fg="black")
 			
 		self.gameInfoLabel.pack()
+
+	def getScoreString(self):
+		i = 65
+		scoresStrings = []
+		for snake in self.snakes:
+			scoresStrings.append("Snake {}: {}".format(chr(i), snake.Score))
+			i += 1
+
+		return "; ".join(scoresStrings)
 
 	def startGame(self):
 		self.score = 0
 		self.canvas.delete("all")
 		SnakeGameView.GAME_OVER = False
 
+		self.Game = GameBoard(self.numPlayers)
 
-		self.Game = GameBoard()
-		self.drawSnake(self.Game.Snake.GetCoordinates())
-		self.canvas.pack()
-
-		self.Direction = self.Game.Snake.Direction
 		# self.addPoint((3,2), 'RIGHT')
 		self.currentRect = None
 
@@ -110,15 +137,47 @@ class SnakeGameView:
 		if SnakeGameView.GAME_OVER and event.keysym == 'space':
 			self.startGame()
 			return
+		if event.keysym == '1':
+			self.numPlayers = 1
+			self.shouldStartNewGame = True
+			return
+		if event.keysym == '2':
+			self.numPlayers = 2
+			self.shouldStartNewGame = True
+			return
+		if event.keysym == '3':
+			self.numPlayers = 3
+			self.shouldStartNewGame = True
+			return
+		if event.keysym == '4':
+			self.numPlayers = 4
+			self.shouldStartNewGame = True
+			return
+		
+		key = self.KeyDict.get(event.keysym, None)
+		if key is not None:
+			(snake,dir) = key
+			self.snakes[snake].NewDirection = dir
 
-		if (event.keysym == 'Right'):
-			self.Direction = Direction.RIGHT
-		elif (event.keysym == 'Left'):
-			self.Direction = Direction.LEFT
-		elif (event.keysym == 'Down'):
-			self.Direction = Direction.UP
-		elif event.keysym == 'Up':
-			self.Direction = Direction.DOWN
+	def initKeyDict(self):
+		P0 = ['Up','Down','Left','Right']
+		P1 = list('wsad')
+		P2 = list('ikjl')
+		P3 = list('tgfh')
+		p0d = self.playerKeyDict(P0,0)
+		p1d = self.playerKeyDict(P1,1)
+		p2d = self.playerKeyDict(P2,2)
+		p3d = self.playerKeyDict(P3,3)
+		self.KeyDict = {**p0d, **p1d, **p2d, **p3d}
+
+		
+	def playerKeyDict(self, keys, playerNumber):
+		# keys should be list of key events in the order:
+		# UP DOWN LEFT RIGHT (WSAD)
+		playerdict = dict()
+		for (key,dir) in zip(keys,[Direction.DOWN,Direction.UP,Direction.LEFT,Direction.RIGHT]):
+			playerdict[key] = (playerNumber,dir)
+		return playerdict
 
 	# def keyReleased(self, event):
 		# self.moveDirX = 0
