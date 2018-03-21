@@ -20,7 +20,7 @@ class SnakeGameView:
 		self.canvas = tk.Canvas(self.window, bg="#666", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
 		self.gameScoreLabel = tk.Label(self.window)
 		self.gameInfoLabel = tk.Label(self.window)
-		self.numPlayers = 4
+		self.numPlayers = 1
 		self.shouldStartNewGame = False
 		self.foodDrawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH,BlinkingColorGenerator())
 		self.food = None
