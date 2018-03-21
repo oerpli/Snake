@@ -16,6 +16,7 @@ class SnakeGameView:
 		self.window = tk.Tk()
 		
 		self.canvas = tk.Canvas(self.window, bg="#666", height=GameBoard.SIZE_Y*SnakeGameView.SNAKE_WIDTH, width=GameBoard.SIZE_X*SnakeGameView.SNAKE_WIDTH)
+		self.gameScoreLabel = tk.Label(self.window)
 		self.gameInfoLabel = tk.Label(self.window)
 		self.numPlayers = 4
 		self.shouldStartNewGame = False
@@ -82,14 +83,16 @@ class SnakeGameView:
 		SnakeGameView.GAME_OVER = True
 
 	def updateGameInfo(self, score = 0, gameOver = False):
-		scores = self.getScoreString()
+		self.window.title("Snake - {} {}".format(self.numPlayers, 'player' if self.numPlayers == 1 else 'players'))
+		self.gameScoreLabel.config(text = self.getScoreString())
 
 		if gameOver:
-			self.gameInfoLabel.config(text = "Game Over - {} - Press Space to Restart".format(scores), fg="red")
+			self.gameInfoLabel.config(text="Game Over! - press space to restart", fg="red")
 		else:
-			self.gameInfoLabel.config(text = scores, fg="black")
+			self.gameInfoLabel.config(text="Game running", fg="black")
 			
 		self.gameInfoLabel.pack()
+		self.gameScoreLabel.pack()
 
 	def getScoreString(self):
 		i = 65
