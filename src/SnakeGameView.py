@@ -1,5 +1,6 @@
 from RectangleDrawer import *
 from SingleColorGenerator import *
+from BlinkingColorGenerator import *
 import tkinter as tk
 from collections import deque
 from Direction import *
@@ -21,8 +22,7 @@ class SnakeGameView:
 		self.gameInfoLabel = tk.Label(self.window)
 		self.numPlayers = 4
 		self.shouldStartNewGame = False
-		self.foodDrawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH)
-		self.foodDrawer.GetColor = (lambda : "red")
+		self.foodDrawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH,BlinkingColorGenerator())
 		self.food = None
 		self.startGame()
 		self.initKeyDict()
@@ -116,8 +116,9 @@ class SnakeGameView:
 		self.Game = GameBoard(self.numPlayers)
 		self.Game.Food.InitDrawer(self.foodDrawer)
 		self.snakes = self.Game.GetSnakes()
-		for snake in self.snakes:
-			drawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH)
+		colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
+		for (i, snake) in enumerate(self.snakes):
+			drawer = RectangleDrawer(self.canvas,self.SNAKE_WIDTH,SingleColorGenerator(colors[i]))
 			snake.InitDrawer(drawer)
 		# self.addPoint((3,2), 'RIGHT')
 		self.currentRect = None
