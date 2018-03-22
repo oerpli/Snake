@@ -110,20 +110,17 @@ class GameRunningState(State):
 		return "; ".join(scoresStrings)
 
 	def initKeyDict(self):
-		P0 = ['Up','Down','Left','Right']
-		P1 = list('wsad')
-		P2 = list('ikjl')
-		P3 = list('tgfh')
-		p0d = self.playerKeyDict(P0,0)
-		p1d = self.playerKeyDict(P1,1)
-		p2d = self.playerKeyDict(P2,2)
-		p3d = self.playerKeyDict(P3,3)
-		self.KeyDict = {**p0d, **p1d, **p2d, **p3d}
+		players = [['Up', 'Down', 'Left', 'Right'],
+				list('wsad'), list('ikjl'), list('tgfh')]
+		self.keyDict = dict()
+		for i, e in enumerate(players[:self.view.numPlayers]):
+			playerdict = self.playerKeyDict(e, i)
+			self.keyDict = {**self.keyDict, **playerdict}
 
 	def playerKeyDict(self, keys, playerNumber):
 		# keys should be list of key events in the order:
 		# UP DOWN LEFT RIGHT (WSAD)
 		playerdict = dict()
-		for (key,dir) in zip(keys,[Direction.DOWN,Direction.UP,Direction.LEFT,Direction.RIGHT]):
-			playerdict[key] = (playerNumber,dir)
+		for (key, dir) in zip(keys, [Direction.DOWN, Direction.UP, Direction.LEFT, Direction.RIGHT]):
+			playerdict[key] = (playerNumber, dir)
 		return playerdict
