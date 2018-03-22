@@ -1,51 +1,113 @@
 from State import *
 from Direction import *
+from RectangleDrawer import *
+from BlinkingColorGenerator import *
+from SingleColorGenerator import *
+from GameBoard import *
 
 class GameRunningState(State):
-	def __init__(self, view):
+	def __init__(self, view, snakeWidth, gameLoopInterval):
 		self.view = view
-		self.initKeyDict()
+		self.window = view.window
+		self.canvas = view.canvas
+		self.snakeWidth = snakeWidth
+		self.gameLoopInterval = gameLoopInterval
+		self.Game = None
 
-	def render(self):
-		(self.view.snakes, newFood) = self.view.Game.Step()
-		if self.view.food is not newFood:
-			self.view.food = newFood
-			self.view.food.InitDrawer(self.view.foodDrawer)
-		for snake in self.view.snakes:
+		self.initKeyDict()
+		self.continueLoop = True
+		self.numPlayers = 2
+		self.foodDrawer = RectangleDrawer(self.canvas, self.snakeWidth, BlinkingColorGenerator())
+		self.food = None
+
+	def start(self):
+		self.score = 0
+		self.canvas.delete("all")
+		
+		self.Game = GameBoard(self.numPlayers)
+		self.Game.Food.InitDrawer(self.foodDrawer)
+		self.snakes = self.Game.GetSnakes()
+
+		colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
+		for (i, snake) in enumerate(self.snakes):
+			drawer = RectangleDrawer(self.canvas,self.snakeWidth,SingleColorGenerator(colors[i]))
+			snake.InitDrawer(drawer)
+
+		self.gameLoop()
+		self.continueLoop = True
+
+	def gameLoop(self):
+		(self.snakes, newFood) = self.Game.Step()
+		if self.food is not newFood:
+			self.food = newFood
+			self.food.InitDrawer(self.foodDrawer)
+		for snake in self.snakes:
 			if not snake.IsAlive():
-				self.view.handleGameOver()
+				self.handleGameOver()
 				return
 		
-		self.view.canvas.delete("all")
-		for snake in self.view.snakes:
+		self.canvas.delete("all")
+		for snake in self.snakes:
 			snake.Draw()
-		self.view.food.Draw()
-		self.view.canvas.pack()
+		self.food.Draw()
+		self.canvas.pack()
 
-		self.view.updateGameInfo()
+		self.updateGameInfo()
+
+		if self.continueLoop:
+			self.window.after(self.gameLoopInterval, self.gameLoop)
 
 	def keyPressed(self, event):
 		if event.keysym == '1':
-			self.view.numPlayers = 1
-			self.view.currentState = self.view.shouldStartNewGameState
+			self.numPlayers = 1
+			self.continueLoop = False
+			self.start()
 			return
 		if event.keysym == '2':
-			self.view.numPlayers = 2
-			self.view.currentState = self.view.shouldStartNewGameState
+			self.numPlayers = 2
+			self.continueLoop = False
+			self.start()
 			return
 		if event.keysym == '3':
-			self.view.numPlayers = 3
-			self.view.currentState = self.view.shouldStartNewGameState
+			self.numPlayers = 3
+			self.continueLoop = False
+			self.start()
 			return
 		if event.keysym == '4':
-			self.view.numPlayers = 4
-			self.view.currentState = self.view.shouldStartNewGameState
+			self.numPlayers = 4
+			self.continueLoop = False
+			self.start()
 			return
 		
 		key = self.KeyDict.get(event.keysym, None)
 		if key is not None:
 			(snake,dir) = key
-			self.view.snakes[snake].NewDirection = dir
+			self.snakes[snake].NewDirection = dir
+
+	def handleGameOver(self):
+		self.updateGameInfo(gameOver = True)
+		self.view.setState(self.view.gameOverState)
+
+	def updateGameInfo(self, score = 0, gameOver = False):
+		self.window.title("Snake - {} {}".format(self.numPlayers, 'player' if self.numPlayers == 1 else 'players'))
+		self.view.gameScoreLabel.config(text = self.getScoreString())
+
+		if gameOver:
+			self.view.gameInfoLabel.config(text="Game Over! - press space to restart", fg="red")
+		else:
+			self.view.gameInfoLabel.config(text="Game running", fg="black")
+			
+		self.view.gameInfoLabel.pack()
+		self.view.gameScoreLabel.pack()
+
+	def getScoreString(self):
+		i = 65
+		scoresStrings = []
+		for snake in self.snakes:
+			scoresStrings.append("Snake {}: {}".format(chr(i), snake.Score))
+			i += 1
+
+		return "; ".join(scoresStrings)
 
 	def initKeyDict(self):
 		P0 = ['Up','Down','Left','Right']
