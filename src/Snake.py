@@ -20,8 +20,11 @@ class Snake(Drawable):
 		for i in range(Snake.INIT_SIZE):
 			pos = Direction.AddToPoint(pos,initDirection)
 			self.Segments.append(pos)
-		self.NewDirection = None
+		self.__NewDirection = None
 		self.DoesLive = True
+
+	def setNewDirection(self, newdir):
+		self.__NewDirection = newdir
 
 	def Draw(self):
 		self.GetDrawer().Draw(self.Segments)
@@ -37,9 +40,9 @@ class Snake(Drawable):
 
 	def Move(self):
 		# Returns new position of front
-		if self.NewDirection is not None:
-			if Direction.ValidNewDirection(self.Direction,self.NewDirection):
-				self.Direction = self.NewDirection
+		if self.__NewDirection is not None:
+			if Direction.ValidNewDirection(self.Direction,self.__NewDirection):
+				self.Direction = self.__NewDirection
 		# last = self.Segments.pop()
 		new = Direction.AddToPoint(self.Segments[-1], self.Direction)
 		# self.Segments.append(last)

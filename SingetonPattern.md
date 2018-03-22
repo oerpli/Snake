@@ -1,4 +1,5 @@
 # Singleton Pattern
+
 The GameBoard class was modified to implement the Singleton pattern.
 Due to Python not having private methods we implemented it the following way:
 
