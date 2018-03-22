@@ -1,10 +1,14 @@
-from abc import ABC, abstractmethod
+from Commander import *
 
-class State(ABC):
-    @abstractmethod
-    def start(self):
-        pass
+class State():
+	def __init__(self):
+		self.Commmander = Commander()
 
-    @abstractmethod
-    def keyPressed(self, event):
-        pass
+	def start(self):
+		pass
+
+	def registerCommand(self,key,function, arg = None):
+		self.Commmander.registerCommand(key,function, arg)
+
+	def keyPressed(self, event):
+		self.Commmander.runCommand(event.keysym)
