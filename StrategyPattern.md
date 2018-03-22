@@ -1,3 +1,5 @@
+# Strategy Pattern
+
 We used the Strategy pattern for the drawing of the snakes.
 This way, we can easily modify the way snakes are drawn during runtime.
 
