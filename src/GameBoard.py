@@ -45,8 +45,8 @@ class GameBoard:
 			newFood = False
 			for snake in self.Snakes:
 				newFront = snake.Move()
-				newFronts.append(newFront)
 				newFront = self.Reappear(snake,newFront)
+				newFronts.append(newFront)
 				if self.Food.IsThere(newFront):
 					snake.Grow = True
 					snake.IncrementScore()	
