@@ -44,8 +44,10 @@ class GameRunningState(State):
 			self.food.InitDrawer(self.foodDrawer)
 		for snake in self.snakes:
 			if not snake.IsAlive():
-				self.handleGameOver()
-				return
+				self.Game.KillSnake(snake)
+		if len(self.snakes) == 0:
+			self.handleGameOver()
+			return
 
 		self.canvas.delete("all")
 		for snake in self.snakes:
@@ -54,7 +56,6 @@ class GameRunningState(State):
 		self.canvas.pack()
 
 		self.updateGameInfo()
-
 		self.loopCall = self.window.after(self.gameLoopInterval, self.gameLoop)
 
 	def handleGameOver(self):
@@ -98,10 +99,7 @@ class GameRunningState(State):
 	def __registerPlayerKeys(self, snake, keys):
 		# keys should be list of key events in the order:
 		# UP DOWN LEFT RIGHT (WSAD)
-		print(snake)
-		print(keys)
 		for (key, dir) in zip(keys, [Direction.DOWN, Direction.UP, Direction.LEFT, Direction.RIGHT]):
-			print(key,dir)
 			self.registerCommand(key, snake.setNewDirection,dir)
 
 	def __changePlayerNumber(self,num):
