@@ -31,6 +31,8 @@ class GameBoard:
 			self.Grow = False
 			self.score = 0
 
+		def KillSnake(self, snake):
+			self.Snakes.remove(snake)
 
 		def GetSnakes(self):
 			return self.Snakes

@@ -1,7 +1,7 @@
 from ColorGenerator import *
-from pylab import cm
 import matplotlib
-
+matplotlib.use("TkAgg")
+from pylab import cm
 
 class ColormapGenerator(ColorGenerator):
 	index = 1
