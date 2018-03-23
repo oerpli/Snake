@@ -50,9 +50,10 @@ class GameRunningState(State):
 			return
 
 		self.canvas.delete("all")
-		for snake in self.snakes:
-			snake.Draw()
-		self.food.Draw()
+		self.Game.Operation()
+		# for snake in self.snakes:
+		# 	snake.Draw()
+		# self.food.Draw()
 		self.canvas.pack()
 
 		self.updateGameInfo()

@@ -1,7 +1,7 @@
-from Drawable import *
+from DrawableLeaf import *
 from RectangleDrawer import *
 
-class Food(Drawable):
+class Food(DrawableLeaf):
 	def __init__(self, position):
 		super().__init__()
 		self.position = position
