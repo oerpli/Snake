@@ -12,3 +12,12 @@ A Python Snake implementation for the TU Delft ATHENS course "Software Design Pa
 
 * Python 3
 * TkInter
+
+
+## Contributors
+
+* Thomas Jirout
+* Abraham Hinteregger
+* Marine Demarty
+* Ashima Vashistha
+* Bruno Agun Gandara
