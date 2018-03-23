@@ -1,4 +1,5 @@
 import random
+random.seed(42)
 from Snake import *
 from Direction import *
 from Food import *
