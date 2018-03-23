@@ -3,8 +3,8 @@ from Direction import *
 from RectangleDrawer import *
 from BlinkingColorGenerator import *
 from SingleColorGenerator import *
+from ColormapGenerator import *
 from GameBoard import *
-
 
 class GameRunningState(State):
 	def __init__(self, view, snakeWidth, gameLoopInterval):
@@ -32,7 +32,7 @@ class GameRunningState(State):
 		colors = ["#ABFF19", "#E8C217", "#FF9526", "#E82C17", "#F968FF"]
 		for (i, snake) in enumerate(self.snakes):
 			drawer = RectangleDrawer(
-				self.canvas, self.snakeWidth, SingleColorGenerator(colors[i]))
+				self.canvas, self.snakeWidth, ColormapGenerator())
 			snake.InitDrawer(drawer)
 
 		self.gameLoop()
