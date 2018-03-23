@@ -6,7 +6,6 @@ from SingleColorGenerator import *
 from ColormapGenerator import *
 from GameBoard import *
 
-
 class GameRunningState(State):
 	def __init__(self, view, snakeWidth, gameLoopInterval):
 		super().__init__()
