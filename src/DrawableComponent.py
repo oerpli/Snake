@@ -9,5 +9,8 @@ class DrawableComponent(Drawable):
 	def childrenIterator(self): # def. impl
 		raise NotImplementedError
 
+	def removeAll(self):
+		raise NotImplementedError
+
 	def Operation(self):
 		raise NotImplementedError

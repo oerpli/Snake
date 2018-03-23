@@ -24,6 +24,7 @@ class GameBoard():
 
 		def NewGame(self, numSnakes = 3):
 			self.Snakes = []
+			self.removeAll()
 			(cX,cY) = (GameBoard.SIZE_X // 2, GameBoard.SIZE_Y // 2)
 
 			dirs = [Direction.LEFT,Direction.RIGHT,Direction.UP,Direction.DOWN]
@@ -40,6 +41,7 @@ class GameBoard():
 
 		def KillSnake(self, snake):
 			self.Snakes.remove(snake)
+			self.remove(snake)
 
 		def GetSnakes(self):
 			return self.Snakes

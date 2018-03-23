@@ -17,6 +17,9 @@ class DrawableComposite(DrawableLeaf):
 	def childrenIterator(self): # def. impl
 		for child in self.Children:
 			yield child
+	
+	def removeAll(self):
+		self.Children.clear()
 
 	def Operation(self):
 		self.Draw()
