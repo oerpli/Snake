@@ -90,17 +90,28 @@ class NetworkGameRunningState(State):
 		# conn.send(msg)
 
 	def __registerNetworkMessages(self):
+		# Gameloop comes as msg
 		self.registerCommand('msgGameLoop',self.gameLoop)
+		# Gameover msg
 		self.registerCommand('msgGameOver',self.handleGameOver)
+		# if playernumber is changed
 		for i in range(1,5):
 			self.registerCommand("msg{}".format(i), self.__changePlayerNumber,i)
+		# direction msgs for each player
 		directions = ["Up","Down","Left","Right"]
 		keyBindings = ["msg{}{}".format(d,i) for (d,i) in zip(directions,range(4))]
 		self.keyDict = dict()
 		zipped = zip(self.snakes, keyBindings)
 		for snake, keys in zipped:
 			self.__registerPlayerKeys(snake, keys)
-	
+		# food syncing
+		self.registerCommmand("msgGetFood",self.__answerFoodPosition)
+		self.registerCommand("msgNewFood",self.Game.GenerateFood)
+
+
+	def __answerFoodPosition(self):
+		foodCord = self.food.position
+		self.__sendNetworkMessage("msg{}".format(foodCord))
 
 	def __registerKeys(self):
 		keys = ['Up', 'Down', 'Left', 'Right', 'space']

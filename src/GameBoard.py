@@ -95,7 +95,8 @@ class GameBoard:
 				if self.IsValidPoint((x,y)):
 					return (x, y)
 
-		def GenerateFood(self):
-			point = self.SamplePoint()
+		def GenerateFood(self, point = None):
+			if point is None:
+				point = self.SamplePoint()
 			self.Food = Food(point)
 			return self.Food

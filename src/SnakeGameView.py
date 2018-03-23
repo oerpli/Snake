@@ -1,5 +1,6 @@
 from GameOverState import *
 from GameRunningState import *
+from NetworkGameRunningState import * 
 import tkinter as tk
 from collections import deque
 import time
@@ -15,7 +16,7 @@ class SnakeGameView:
 		self.initView()
 
 		self.gameOverState = GameOverState(self)
-		self.gameRunningState = GameRunningState(self, SnakeGameView.SNAKE_WIDTH, SnakeGameView.GAME_LOOP_INTERVAL)
+		self.gameRunningState = NetworkGameRunningState(self, SnakeGameView.SNAKE_WIDTH, SnakeGameView.GAME_LOOP_INTERVAL)
 		self.currentState = self.gameRunningState
 		
 		self.window.bind_all("<Key>", self.keyPressed)
