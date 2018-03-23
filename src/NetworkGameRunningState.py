@@ -99,11 +99,9 @@ class NetworkGameRunningState(State):
 			self.registerCommand("msg{}".format(i), self.__changePlayerNumber,i)
 		# direction msgs for each player
 		directions = ["Up","Down","Left","Right"]
-		keyBindings = ["msg{}{}".format(d,i) for (d,i) in zip(directions,range(4))]
-		self.keyDict = dict()
-		zipped = zip(self.snakes, keyBindings)
-		for snake, keys in zipped:
-			self.__registerPlayerKeys(snake, keys)
+		for i,snake in enumerate(self.snakes):
+			msgs = ["msg{}{}".format(dir,i) for dir in directions]
+			self.__registerPlayerKeys(snake, msgs)
 		# food syncing
 		self.registerCommand("msgGetFood",self.__answerFoodPosition)
 		self.registerCommand("msgNewFood",self.Game.GenerateFood)
