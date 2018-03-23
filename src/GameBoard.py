@@ -2,8 +2,9 @@ import random
 from Snake import *
 from Direction import *
 from Food import *
+from DrawableComposite import *
 
-class GameBoard:
+class GameBoard():
 	SIZE_X = 30
 	SIZE_Y = 30
 	instance = None
@@ -16,21 +17,31 @@ class GameBoard:
 
 	def __getattr__(self, name):
 		return getattr(self.instance, name)
-	class __GameBoard:
+	class __GameBoard(DrawableComposite):
 		def __init__(self,numSnakes):
+			super().__init__()
 			self.NewGame(numSnakes)
 
 		def NewGame(self, numSnakes = 3):
 			self.Snakes = []
+			self.removeAll()
 			(cX,cY) = (GameBoard.SIZE_X // 2, GameBoard.SIZE_Y // 2)
 
 			dirs = [Direction.LEFT,Direction.RIGHT,Direction.UP,Direction.DOWN]
 			self.Snakes = [Snake(cX,cY,initDir) for initDir in dirs[:numSnakes]]
+			for snake in self.Snakes:
+				self.add(snake)
 			self.Food = Food((0,0))
 			self.GenerateFood()
 			self.Grow = False
 			self.score = 0
 
+		def Draw(self):
+			pass # here we could implement the rendering of a fancy background
+
+		def KillSnake(self, snake):
+			self.Snakes.remove(snake)
+			self.remove(snake)
 
 		def GetSnakes(self):
 			return self.Snakes
@@ -45,8 +56,8 @@ class GameBoard:
 			newFood = False
 			for snake in self.Snakes:
 				newFront = snake.Move()
-				newFronts.append(newFront)
 				newFront = self.Reappear(snake,newFront)
+				newFronts.append(newFront)
 				if self.Food.IsThere(newFront):
 					snake.Grow = True
 					snake.IncrementScore()	
@@ -93,7 +104,10 @@ class GameBoard:
 				if self.IsValidPoint((x,y)):
 					return (x, y)
 
-		def GenerateFood(self):
-			point = self.SamplePoint()
+		def GenerateFood(self, point = None):
+			self.remove(self.Food)
+			if point is None:
+				point = self.SamplePoint()
 			self.Food = Food(point)
+			self.add(self.Food)
 			return self.Food

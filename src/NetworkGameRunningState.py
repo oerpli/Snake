@@ -6,7 +6,7 @@ from SingleColorGenerator import *
 from ColormapGenerator import *
 from GameBoard import *
 
-class GameRunningState(State):
+class NetworkGameRunningState(State):
 	def __init__(self, view, snakeWidth, gameLoopInterval):
 		super().__init__()
 		self.view = view
@@ -50,17 +50,16 @@ class GameRunningState(State):
 			return
 
 		self.canvas.delete("all")
-		self.Game.Operation()
-		# for snake in self.snakes:
-		# 	snake.Draw()
-		# self.food.Draw()
+		for snake in self.snakes:
+			snake.Draw()
+		self.food.Draw()
 		self.canvas.pack()
 
 		self.updateGameInfo()
-		self.loopCall = self.window.after(self.gameLoopInterval, self.gameLoop)
+		# self.loopCall = self.window.after(self.gameLoopInterval, self.gameLoop)
 
 	def handleGameOver(self):
-		self.window.after_cancel(self.loopCall)
+		# self.window.after_cancel(self.loopCall)
 		self.updateGameInfo(gameOver=True)
 		self.view.setState(self.view.gameOverState)
 
@@ -86,16 +85,38 @@ class GameRunningState(State):
 			i += 1
 		return "; ".join(scoresStrings)
 
-	def __registerKeys(self):
-		self.registerCommand('space',self.handleGameOver)
+	def __sendNetworkMessage(self,msg):
+		raise NotImplementedError
+		# conn.send(msg)
+
+	def __registerNetworkMessages(self):
+		# Gameloop comes as msg
+		self.registerCommand('msgGameLoop',self.gameLoop)
+		# Gameover msg
+		self.registerCommand('msgGameOver',self.handleGameOver)
+		# if playernumber is changed
 		for i in range(1,5):
-			self.registerCommand(str(i), self.__changePlayerNumber,i)
-		keyBindings = [['Up', 'Down', 'Left', 'Right'],
-					   list('wsad'), list('ikjl'), list('tgfh')]
+			self.registerCommand("msg{}".format(i), self.__changePlayerNumber,i)
+		# direction msgs for each player
+		directions = ["Up","Down","Left","Right"]
+		keyBindings = ["msg{}{}".format(d,i) for (d,i) in zip(directions,range(4))]
 		self.keyDict = dict()
 		zipped = zip(self.snakes, keyBindings)
 		for snake, keys in zipped:
 			self.__registerPlayerKeys(snake, keys)
+		# food syncing
+		self.registerCommand("msgGetFood",self.__answerFoodPosition)
+		self.registerCommand("msgNewFood",self.Game.GenerateFood)
+
+
+	def __answerFoodPosition(self):
+		foodCord = self.food.position
+		self.__sendNetworkMessage("msg{}".format(foodCord))
+
+	def __registerKeys(self):
+		keys = ['Up', 'Down', 'Left', 'Right', 'space']
+		for key in keys:
+			self.registerCommand(key,self.__sendNetworkMessage,key)
 
 	def __registerPlayerKeys(self, snake, keys):
 		# keys should be list of key events in the order:
@@ -104,6 +125,6 @@ class GameRunningState(State):
 			self.registerCommand(key, snake.setNewDirection,dir)
 
 	def __changePlayerNumber(self,num):
-		self.window.after_cancel(self.loopCall)
+		# self.window.after_cancel(self.loopCall)
 		self.numPlayers = num
 		self.start()

@@ -4,9 +4,9 @@ from enum import Enum
 from collections import deque
 from Direction import *
 from RectangleDrawer import *
-from Drawable import *
+from DrawableComposite import *
 
-class Snake(Drawable):
+class Snake(DrawableComposite):
 	INIT_SIZE = 3
 	SPEED = 1
 
