@@ -16,7 +16,7 @@ class SnakeGameView:
 		self.initView()
 
 		self.gameOverState = GameOverState(self)
-		self.gameRunningState = NetworkGameRunningState(self, SnakeGameView.SNAKE_WIDTH, SnakeGameView.GAME_LOOP_INTERVAL)
+		self.gameRunningState = GameRunningState(self, SnakeGameView.SNAKE_WIDTH, SnakeGameView.GAME_LOOP_INTERVAL)
 		self.currentState = self.gameRunningState
 		
 		self.window.bind_all("<Key>", self.keyPressed)
