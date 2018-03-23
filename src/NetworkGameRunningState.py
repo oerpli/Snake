@@ -105,7 +105,7 @@ class NetworkGameRunningState(State):
 		for snake, keys in zipped:
 			self.__registerPlayerKeys(snake, keys)
 		# food syncing
-		self.registerCommmand("msgGetFood",self.__answerFoodPosition)
+		self.registerCommand("msgGetFood",self.__answerFoodPosition)
 		self.registerCommand("msgNewFood",self.Game.GenerateFood)
 
 
