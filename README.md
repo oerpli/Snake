@@ -10,6 +10,9 @@ Brief summary of the patterns used and how they contributed to code that is easi
 * Fancy colors
 * Coming soon(ish): Networked multiplayer
 
+## Video
+![](https://raw.githubusercontent.com/oerpli/Snake/master/screencap.gif)
+
 ## Getting started
 * Install Python 3.x, e.g. via [Anaconda](https://www.anaconda.com/download/#download)
 * If for some reason your Python distribution of choice does not come with TkInter included, use `pip install TkInter` to install it. 
