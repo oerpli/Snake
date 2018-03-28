@@ -1,4 +1,4 @@
-# TUD15-Snake
+# Snake
 A Snake implementation in Python for the TU Delft ATHENS course "Software Design Patterns" held by [@sback](https://github.com/sback).
 
 The goal was to start first program a simple game in some OO language and gradually improve the codebase, using OO design patterns.
@@ -31,4 +31,6 @@ Brief summary of the patterns used and how they contributed to code that is easi
 * Thomas Jirout [@Schiru](https://github.com/schiru)
 * Abraham Hinteregger [@oerpli](https://github.com/oerpli)
 * Marine Demarty [@MDemarty](https://github.com/MDemarty)
+* Ashima Vashistha [@ashimavashistha](https://github.com/ashimavashistha)
 * Bruno Agun Gandara [@brunoagun](https://github.com/brunoagun)
+
