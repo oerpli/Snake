@@ -10,7 +10,9 @@ Brief summary of the patterns used and how they contributed to code that is easi
 * Fancy colors
 * Coming soon(ish): Networked multiplayer
 
-## Video
+## Is it any good?
+Yes.
+
 ![](https://raw.githubusercontent.com/oerpli/Snake/master/screencap.gif)
 
 ## Getting started
