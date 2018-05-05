@@ -32,7 +32,3 @@ Yes.
 ## Contributors
 * Thomas Jirout [@Schiru](https://github.com/schiru)
 * Abraham Hinteregger [@oerpli](https://github.com/oerpli)
-* Marine Demarty [@MDemarty](https://github.com/MDemarty)
-* Ashima Vashistha [@ashimavashistha](https://github.com/ashimavashistha)
-* Bruno Agun Gandara [@brunoagun](https://github.com/brunoagun)
-
